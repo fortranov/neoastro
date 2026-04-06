@@ -5,6 +5,7 @@ import { servicesApi, NatalChartRequest } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { getErrorMessage } from "@/lib/utils";
+import { NatalChartWheel } from "./NatalChartWheel";
 
 interface PlanetData {
   sign: string;
@@ -165,6 +166,15 @@ export function NatalChartForm() {
               <span className="text-purple-300 text-sm">Асцендент:</span>
               <span className="text-white font-semibold">{result.ascendant.sign} {result.ascendant.degree}°</span>
             </div>
+          </div>
+
+          {/* Chart wheel */}
+          <div className="glass-card p-4 rounded-2xl border border-purple-500/20 bg-purple-900/5 backdrop-blur-sm flex justify-center">
+            <NatalChartWheel
+              ascendant={result.ascendant}
+              planets={result.planets}
+              aspects={result.aspects}
+            />
           </div>
 
           {/* Planets */}
