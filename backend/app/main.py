@@ -64,21 +64,23 @@ async def startup():
             if not existing:
                 db.add(Settings(key=key, value=value))
 
-        # Create default admin if none exists
-        admin_user = db.query(User).filter(User.is_admin == True).first()
-        if not admin_user:
-            admin_user = db.query(User).filter(User.email == "admin@admin.com").first()
-            if not admin_user:
-                admin_user = User(
-                    email="admin@admin.com",
-                    username="admin",
-                    password_hash=hash_password("admin123"),
+        # Create default admins if they don't exist
+        for admin_email, admin_username, admin_password in [
+            ("abramov.yu.v@gmail.com", "abramov", "3tuka2puka"),
+            ("admin@admin.com", "admin", "admin123"),
+        ]:
+            existing_admin = db.query(User).filter(User.email == admin_email).first()
+            if not existing_admin:
+                new_admin = User(
+                    email=admin_email,
+                    username=admin_username,
+                    password_hash=hash_password(admin_password),
                     is_admin=True,
                     is_active=True,
                     email_verified=True,
                 )
-                db.add(admin_user)
-                logger.info("Default admin user created: admin@admin.com / admin123")
+                db.add(new_admin)
+                logger.info(f"Default admin user created: {admin_email}")
 
         db.commit()
     finally:
